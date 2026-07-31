@@ -200,14 +200,23 @@ export default function App() {
                 <span className="hidden md:inline">{t(lang, "nav.export")}</span>
               </button>
 
-              <button
-                type="button"
-                onClick={() => setLang((l) => (l === "pt" ? "en" : "pt"))}
-                className="float-sm inline-flex h-8 items-center rounded-xl px-2.5 text-xs font-semibold text-dim hover:text-text"
-                aria-label="Toggle language"
-              >
-                {lang === "pt" ? "PT" : "EN"}
-              </button>
+              {/* Segmented PT | EN control (standardized with ABM Orchestrator):
+                  the active language is highlighted so switching is unambiguous. */}
+              <div className="float-sm inline-flex overflow-hidden rounded-xl" role="group" aria-label="Language">
+                {(["pt", "en"] as Lang[]).map((l) => (
+                  <button
+                    key={l}
+                    type="button"
+                    onClick={() => setLang(l)}
+                    aria-pressed={lang === l}
+                    className={`px-2.5 py-1.5 text-xs font-semibold transition-colors ${
+                      lang === l ? "bg-signal text-white" : "text-dim hover:text-text"
+                    }`}
+                  >
+                    {l.toUpperCase()}
+                  </button>
+                ))}
+              </div>
 
               <ThemeToggle theme={theme} toggle={toggleTheme} lang={lang} />
             </div>
