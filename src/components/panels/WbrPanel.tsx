@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Sparkles, Copy, Check, RefreshCw, AlertTriangle } from "lucide-react";
 import { Panel } from "../ui/Panel";
 import { Eyebrow } from "../ui/Eyebrow";
@@ -31,6 +31,9 @@ export interface WbrMetrics {
 
 export function WbrPanel({ metrics, lang }: { metrics: WbrMetrics; lang: Lang }) {
   const [wbr, setWbr] = useState<Wbr | null>(null);
+  // Language the current narrative was generated in — the AI text is fetched
+  // per-language, so we track this to re-fetch when the user switches languages.
+  const [wbrLang, setWbrLang] = useState<Lang | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -40,12 +43,23 @@ export function WbrPanel({ metrics, lang }: { metrics: WbrMetrics; lang: Lang })
     setError(null);
     try {
       setWbr(await postNarrate(metrics, lang));
+      setWbrLang(lang);
     } catch {
       setError(t(lang, "wbr.error"));
     } finally {
       setLoading(false);
     }
   }
+
+  // Switching the language toggle must re-translate an already-generated report:
+  // the WBR prose is produced by the AI in one language and can't be swapped by
+  // relabeling, so re-generate it in the active language when the user switches.
+  useEffect(() => {
+    if (wbr && wbrLang && wbrLang !== lang && !loading) {
+      generate();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang]);
 
   async function copy() {
     if (!wbr) return;
