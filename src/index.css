@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Salesforce-inspired visual identity (Lightning) ─────────────────────────
+   Brand accent is Salesforce blue. Surfaces are borderless and float on
+   layered shadows (soft-UI depth) with a top inner highlight for a subtle 3D
+   edge. Light is Lightning's default (cloud-grey page, white cards, navy ink);
+   dark is a deep-navy operator variant. No Salesforce marks or wordmarks. */
+:root,
+[data-theme="dark"] {
+  --ink: #081726; --panel: #12283B; --panel2: #17334A; --panel3: #1D3D57;
+  --line: #274763;
+  --text: #EAF3FB; --dim: #9DB4C7; --faint: #6786A0;
+  --signal: #1B96FF; --cyan: #06A59A;
+  --good: #45C65A; --watch: #FE9339; --risk: #FE5C4C;
+  --edge-hi: rgba(255, 255, 255, 0.07);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 16px rgba(2, 12, 24, 0.45);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.4), 0 18px 44px rgba(2, 12, 24, 0.55);
+  --shadow-lg: 0 4px 10px rgba(0, 0, 0, 0.45), 0 30px 66px rgba(2, 12, 24, 0.6);
+  --glow: 0 12px 36px rgba(27, 150, 255, 0.34);
+  --atmo:
+    radial-gradient(1200px 640px at 82% -10%, rgba(27, 150, 255, 0.2), transparent 60%),
+    radial-gradient(920px 540px at -6% 6%, rgba(6, 165, 154, 0.13), transparent 58%);
+}
+
+/* Light is Lightning's default: cloud-grey page, white cards, navy ink. */
+[data-theme="light"] {
+  --ink: #EEF1F6; --panel: #FFFFFF; --panel2: #F4F8FC; --panel3: #FFFFFF;
+  --line: #E1E5EB;
+  --text: #16325C; --dim: #54698D; --faint: #8A9BB5;
+  --signal: #0176D3; --cyan: #0B827C;
+  --good: #2E844A; --watch: #A86403; --risk: #BA0517;
+  --edge-hi: rgba(255, 255, 255, 0.95);
+  --shadow-sm: 0 1px 2px rgba(22, 50, 92, 0.06), 0 6px 16px rgba(22, 50, 92, 0.08);
+  --shadow-md: 0 2px 8px rgba(22, 50, 92, 0.07), 0 18px 44px rgba(22, 50, 92, 0.12);
+  --shadow-lg: 0 6px 16px rgba(22, 50, 92, 0.09), 0 30px 70px rgba(22, 50, 92, 0.16);
+  --glow: 0 12px 32px rgba(1, 118, 211, 0.24);
+  --atmo:
+    radial-gradient(1200px 640px at 82% -10%, rgba(1, 118, 211, 0.1), transparent 60%),
+    radial-gradient(920px 540px at -6% 6%, rgba(11, 130, 124, 0.07), transparent 58%);
+}
+
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background: var(--atmo), var(--ink);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: "Salesforce Sans", "Helvetica Neue", ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+  .float {
+    background: var(--panel);
+    box-shadow: var(--shadow-md), inset 0 1px 0 var(--edge-hi);
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+  }
+  .float-lift:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg), inset 0 1px 0 var(--edge-hi); }
+  .float-sm {
+    background: var(--panel2);
+    box-shadow: var(--shadow-sm), inset 0 1px 0 var(--edge-hi);
+  }
+  .float-raised {
+    background: var(--panel3);
+    box-shadow: var(--shadow-lg), inset 0 1px 0 var(--edge-hi);
+  }
+  .brand-glow { box-shadow: var(--glow); }
+  .hairline {
+    height: 3px; border-radius: 3px;
+    background: linear-gradient(90deg, var(--signal), var(--cyan) 60%, transparent);
+  }
+  .chart-tip {
+    background: var(--panel3) !important;
+    border: none !important;
+    border-radius: 12px !important;
+    box-shadow: var(--shadow-md) !important;
+    color: var(--text) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+  .float-lift:hover { transform: none; }
+}
+:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff !important; }
+  .float, .float-sm, .float-raised { box-shadow: none !important; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
