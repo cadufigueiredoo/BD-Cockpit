@@ -73,6 +73,21 @@ export default function App() {
     setSaves(listSaves());
   }
 
+  // PDF export (same behavior as GTM Planner): name the file after the dataset
+  // and force light theme so the printed document is clean, then restore.
+  function exportPDF() {
+    const prevTitle = document.title;
+    const name = String(dataset.label || "BD Cockpit").trim().replace(/[\\/:*?"<>|]/g, "-");
+    document.title = name || "BD Cockpit";
+    const wasDark = theme === "dark";
+    if (wasDark) toggleTheme();
+    setTimeout(() => {
+      window.print();
+      document.title = prevTitle;
+      if (wasDark) toggleTheme();
+    }, wasDark ? 250 : 50);
+  }
+
   const isDemo = dataset.source === "preset";
 
   return (
@@ -193,7 +208,7 @@ export default function App() {
 
               <button
                 type="button"
-                onClick={() => window.print()}
+                onClick={exportPDF}
                 className="float-sm inline-flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-xs text-dim hover:text-text"
               >
                 <Printer size={13} />
