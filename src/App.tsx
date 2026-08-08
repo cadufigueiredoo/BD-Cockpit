@@ -9,6 +9,8 @@ import { Cockpit } from "./components/Cockpit";
 import { ImportWizard } from "./components/ImportWizard";
 import { ThemeToggle } from "./components/ui/ThemeToggle";
 import { Signature } from "./components/ui/Signature";
+import { LeadGate } from "./components/LeadGate";
+import { readLead, type Lead } from "./lead";
 
 type View = "cockpit" | "import";
 
@@ -19,6 +21,7 @@ const PRESET_REFERENCE = "2026-07-25T00:00:00.000Z";
 export default function App() {
   const [theme, toggleTheme] = useTheme();
   const [lang, setLang] = useState<Lang>("pt");
+  const [lead, setLead] = useState<Lead | null>(() => readLead());
   const [dataset, setDataset] = useState<Dataset>(() => buildPreset(PRESET_REFERENCE));
   const [referenceISO, setReferenceISO] = useState<string>(PRESET_REFERENCE);
   const [view, setView] = useState<View>("cockpit");
@@ -92,6 +95,7 @@ export default function App() {
 
   return (
     <div className="min-h-full">
+      {!lead && <LeadGate source="BD Cockpit" onDone={setLead} theme={theme} toggleTheme={toggleTheme} />}
       <header className="no-print sticky top-0 z-20">
         <div className="float rounded-none">
           <div className="mx-auto flex max-w-[1400px] flex-wrap items-center gap-3 px-5 py-3">
